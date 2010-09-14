@@ -3,7 +3,7 @@
 Plugin Name: FacePress
 Description: All the tools you need to integrate your wordpress and facebook.
 Author: Louy
-Version: 0.2
+Version: 0.1
 Author URI: http://louyblog.wordpress.com 
 Text Domain: tp
 Domain Path: /po
@@ -22,7 +22,7 @@ load_plugin_textdomain( 'fp', false, dirname( plugin_basename( __FILE__ ) ) . '/
 /**
  * FacePress Core:
  */
-define('FP_VERSION', '0.2');
+define('FP_VERSION', '0.1');
 
 // require PHP 5
 function fp_activation_check(){
@@ -58,7 +58,7 @@ function fp_init() {
 
 function fb_all_js() {
 	/* translators: Facebook Locale */
-	$locale = _x('en_US', 'FB Locale');
+	$locale = _x('en_US', 'FB Locale', 'fp');
 ?>
 <div id="fb-root"></div>
 <script>
@@ -121,7 +121,7 @@ FB_RequireFeatures(["XFBML"], function() {
 // action links
 add_filter('plugin_action_links_'.plugin_basename(__FILE__), 'fp_settings_link', 10, 1);
 function fp_settings_link($links) {
-	$links[] = '<a href="'.admin_url('options-general.php?page=fp').'">'.__('Settings').'</a>';
+	$links[] = '<a href="'.admin_url('options-general.php?page=fp').'">'.__('Settings', 'fp').'</a>';
 	return $links;
 }
 
@@ -130,38 +130,38 @@ add_action('admin_init', 'fp_admin_init',9);
 function fp_admin_init(){
 	$options = fp_options();
 	if (empty($options['api_key']) || empty($options['app_secret']) || empty($options['appid'])) {
-		add_action('admin_notices', create_function( '', "echo '<div class=\"error\"><p>".sprintf(__('FacePress needs configuration information on its <a href="%s">settings</a> page.'), admin_url('options-general.php?page=fp'))."</p></div>';" ) );
+		add_action('admin_notices', create_function( '', "echo '<div class=\"error\"><p>".sprintf(__('FacePress needs configuration information on its <a href="%s">settings</a> page.', 'fp'), admin_url('options-general.php?page=fp'))."</p></div>';" ) );
 	}
 	//add_action('admin_head','fp_featureloader',20);
 	add_action('admin_footer','fp_add_base_js',20);
 	wp_enqueue_script('jquery');
 	register_setting( 'fp_options', 'fp_options', 'fp_options_validate' );
-	add_settings_section('fp_main', __('FacePress Main Settings'), 'fp_section_text', 'fp');
-	if (!defined('FACEBOOK_API_KEY')) add_settings_field('fp_api_key', __('Facebook API Key'), 'fp_setting_api_key', 'fp', 'fp_main');
-	if (!defined('FACEBOOK_APP_SECRET')) add_settings_field('fp_app_secret', __('Facebook Application Secret'), 'fp_setting_app_secret', 'fp', 'fp_main');
-	if (!defined('FACEBOOK_APP_ID')) add_settings_field('fp_appid', __('Facebook Application ID'), 'fp_setting_appid', 'fp', 'fp_main');
-	if (!defined('FACEBOOK_FANPAGE')) add_settings_field('fp_fanpage', __('Facebook Fan Page'), 'fp_setting_fanpage', 'fp', 'fp_main');
+	add_settings_section('fp_main', __('FacePress Main Settings', 'fp'), 'fp_section_text', 'fp');
+	if (!defined('FACEBOOK_API_KEY')) add_settings_field('fp_api_key', __('Facebook API Key', 'fp'), 'fp_setting_api_key', 'fp', 'fp_main');
+	if (!defined('FACEBOOK_APP_SECRET')) add_settings_field('fp_app_secret', __('Facebook Application Secret', 'fp'), 'fp_setting_app_secret', 'fp', 'fp_main');
+	if (!defined('FACEBOOK_APP_ID')) add_settings_field('fp_appid', __('Facebook Application ID', 'fp'), 'fp_setting_appid', 'fp', 'fp_main');
+	if (!defined('FACEBOOK_FANPAGE')) add_settings_field('fp_fanpage', __('Facebook Fan Page', 'fp'), 'fp_setting_fanpage', 'fp', 'fp_main');
 }
 
 // add the admin options page
 add_action('admin_menu', 'fp_admin_add_page');
 function fp_admin_add_page() {
-	$mypage = add_options_page(__('FacePress'), __('FacePress'), 'manage_options', 'fp', 'fp_options_page');
+	$mypage = add_options_page(__('FacePress', 'fp'), __('FacePress', 'fp'), 'manage_options', 'fp', 'fp_options_page');
 }
 
 // display the admin options page
 function fp_options_page() {
 ?>
 	<div class="wrap">
-	<h2><?php _e('FacePress'); ?></h2>
-	<p><?php _e('Options related to the FacePress plugin.'); ?></p>
+	<h2><?php _e('FacePress', 'fp'); ?></h2>
+	<p><?php _e('Options related to the FacePress plugin.', 'fp'); ?></p>
 	<form method="post" action="options.php">
 	<?php settings_fields('fp_options'); ?>
 	<table><tr><td>
 	<?php do_settings_sections('fp'); ?>	
 	</td></tr></table>
 	<p class="submit">
-	<input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
+	<input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes', 'fp') ?>" />
 	</p>
 	</form>
 	</div>
@@ -174,21 +174,21 @@ function fp_section_text() {
 	if (empty($options['api_key']) || empty($options['app_secret']) || empty($options['appid'])) {
 ?>
 <p><?php _e('To connect your site to Facebook, you will need a Facebook Application. 
-If you have already created one, please insert your API key, Application Secret, and Application ID below.'); ?></p>
-<p><strong><?php _e('Can&#39;t find your key?'); ?></strong></p>
+If you have already created one, please insert your API key, Application Secret, and Application ID below.', 'fp'); ?></p>
+<p><strong><?php _e('Can&#39;t find your key?', 'fp'); ?></strong></p>
 <ol>
-<li><?php _e('Get a list of your applications from here: <a target="_blank" href="http://www.facebook.com/developers/apps.php">Facebook Application List</a>'); ?></li>
-<li><?php _e('Select the application you want, then copy and paste the API key, Application Secret, and Application ID from there.'); ?></li>
+<li><?php _e('Get a list of your applications from here: <a target="_blank" href="http://www.facebook.com/developers/apps.php">Facebook Application List</a>', 'fp'); ?></li>
+<li><?php _e('Select the application you want, then copy and paste the API key, Application Secret, and Application ID from there.', 'fp'); ?></li>
 </ol>
 
-<p><strong><?php _e('Haven&#39;t created an application yet?</strong> Don&#39;t worry, it&#39;s easy!'); ?></p>
+<p><strong><?php _e('Haven&#39;t created an application yet?</strong> Don&#39;t worry, it&#39;s easy!', 'fp'); ?></p>
 <ol>
-<li><?php _e('Go to this link to create your application: <a target="_blank" href="http://developers.facebook.com/setup.php">Facebook Connect Setup</a>'); ?></li>
-<li><?php _e('When it tells you to "Upload a file" on step 2, just hit the "Upload Later" button. This plugin takes care of that part for you!'); ?></li>
-<li><?php _e('On the final screen, there will be an API Key field, in the yellow box. Copy and paste that information into here.'); ?></li>
+<li><?php _e('Go to this link to create your application: <a target="_blank" href="http://developers.facebook.com/setup.php">Facebook Connect Setup</a>', 'fp'); ?></li>
+<li><?php _e('When it tells you to "Upload a file" on step 2, just hit the "Upload Later" button. This plugin takes care of that part for you!', 'fp'); ?></li>
+<li><?php _e('On the final screen, there will be an API Key field, in the yellow box. Copy and paste that information into here.', 'fp'); ?></li>
 <li><?php _e('You can get the rest of the information from the application on the 
-<a target="_blank" href="http://www.facebook.com/developers/apps.php">Facebook Application List</a> page.'); ?></li>
-<li><?php _e('Select the application you want, then copy and paste the API key, Application Secret, and Application ID from there.'); ?></li>
+<a target="_blank" href="http://www.facebook.com/developers/apps.php">Facebook Application List</a> page.', 'fp'); ?></li>
+<li><?php _e('Select the application you want, then copy and paste the API key, Application Secret, and Application ID from there.', 'fp'); ?></li>
 </ol>
 <?php
 		// look for an FBFoundations key if we dont have one of our own, 
@@ -210,7 +210,7 @@ If you have already created one, please insert your API key, Application Secret,
 		} catch (Exception $e) {
 		    // bad API key or secret or something
 		    $error=true;
-		    echo '<p class="error">'.__('Facebook doesn&#39;t like your settings, it says: ');
+		    echo '<p class="error">'.__('Facebook doesn&#39;t like your settings, it says: ', 'fp');
 		    echo $e->getMessage();
 		    echo '.</p>';
 		}
@@ -225,12 +225,12 @@ If you have already created one, please insert your API key, Application Secret,
 			$siteurl = trailingslashit(get_option('siteurl'));
 			if (@strpos($siteurl, $connecturl) === false) {
 				$error = true;
-				echo '<p class="error">'.sprintf(__('Your Facebook Application\'s "Connect URL" is configured incorrectly. It is currently set to "%s" when it should be set to "%s" .'), $connecturl, $siteurl) . '</p>';
+				echo '<p class="error">'.sprintf(__('Your Facebook Application\'s "Connect URL" is configured incorrectly. It is currently set to "%s" when it should be set to "%s" .', 'fp'), $connecturl, $siteurl) . '</p>';
 			}
 
 			if ($error) {
 ?>
-<p class="error"><?php sprintf(_e('To correct these errors, you may need to <a href="http://www.facebook.com/developers/editapp.php?app_id=%s">edit your applications settings</a> and correct the values therein. The site will not work properly until the errors are corrected.'), $options['appid']); ?></p>
+<p class="error"><?php sprintf(_e('To correct these errors, you may need to <a href="http://www.facebook.com/developers/editapp.php?app_id=%s">edit your applications settings</a> and correct the values therein. The site will not work properly until the errors are corrected.', 'fp'), $options['appid']); ?></p>
 <?php
 			}
 		}
@@ -259,26 +259,26 @@ add_filter('option_fp_options', 'fp_override_options');
 function fp_setting_appid() {
 	if (defined('FACEBOOK_APP_ID')) return;
 	$options = fp_options();
-	echo "<input type='text' id='fpappid' name='fp_options[appid]' value='{$options['appid']}' size='40' /> ".__('(required)');
-	if (!empty($options['appid'])) echo '<p>'.sprintf(__('Here is a <a href="http://www.facebook.com/apps/application.php?id=%s&amp;v=wall">link to your applications wall</a>. There you can give it a name, upload a profile picture, things like that. Look for the &quot;Edit Application&quot; link to modify the application.'), $options['appid']).'</p>';
+	echo "<input type='text' id='fpappid' name='fp_options[appid]' value='{$options['appid']}' size='40' /> ".__('(required)', 'fp');
+	if (!empty($options['appid'])) echo '<p>'.sprintf(__('Here is a <a href="http://www.facebook.com/apps/application.php?id=%s&amp;v=wall">link to your applications wall</a>. There you can give it a name, upload a profile picture, things like that. Look for the &quot;Edit Application&quot; link to modify the application.', 'fp'), $options['appid']).'</p>';
 }
 function fp_setting_api_key() {
 	if (defined('FACEBOOK_APP_KEY')) return;
 	$options = fp_options();
-	echo "<input type='text' id='fpapikey' name='fp_options[api_key]' value='{$options['api_key']}' size='40' /> ".__('(required)');
+	echo "<input type='text' id='fpapikey' name='fp_options[api_key]' value='{$options['api_key']}' size='40' /> ".__('(required)', 'fp');
 }
 function fp_setting_app_secret() {
 	if (defined('FACEBOOK_APP_SECRET')) return;
 	$options = fp_options();
-	echo "<input type='text' id='fpappsecret' name='fp_options[app_secret]' value='{$options['app_secret']}' size='40' /> ".__('(required)');
+	echo "<input type='text' id='fpappsecret' name='fp_options[app_secret]' value='{$options['app_secret']}' size='40' /> ".__('(required)', 'fp');
 }
 function fp_setting_fanpage() {
 	if (defined('FACEBOOK_FANPAGE')) return;
 	$options = get_option('fp_options'); ?>
 
-<p><?php _e('Some sites use Fan Pages on Facebook to connect with their users. The Application wall acts as a  Fan Page in all respects, however some sites have been using Fan Pages previously, and already have communities and content built around them. Facebook offers no way to migrate these, so the option to use an existing Fan Page is offered for people with this situation. Note that this doesn&#39;t <em>replace</em> the application, as that is not optional. However, you can use a Fan Page for specific parts of the FacePress plugin, such as the Fan Box, the Publisher, and the Chicklet.'); ?></p>
+<p><?php _e('Some sites use Fan Pages on Facebook to connect with their users. The Application wall acts as a  Fan Page in all respects, however some sites have been using Fan Pages previously, and already have communities and content built around them. Facebook offers no way to migrate these, so the option to use an existing Fan Page is offered for people with this situation. Note that this doesn&#39;t <em>replace</em> the application, as that is not optional. However, you can use a Fan Page for specific parts of the FacePress plugin, such as the Fan Box, the Publisher, and the Chicklet.', 'fp'); ?></p>
 
-<p><?php _e('If you have a <a href="http://www.facebook.com/pages/manage/">Fan Page</a> that you want to use for your site, enter the ID of the page here. Most users should leave this blank.'); ?></p>
+<p><?php _e('If you have a <a href="http://www.facebook.com/pages/manage/">Fan Page</a> that you want to use for your site, enter the ID of the page here. Most users should leave this blank.', 'fp'); ?></p>
 
 <?php
 	echo "<input type='text' id='fpfanpage' name='fp_options[fanpage]' value='{$options['fanpage']}' size='40' />";
@@ -447,7 +447,7 @@ function fp_check_connection() {
 add_action('admin_init','fp_comm_error_check');
 function fp_comm_error_check() {
 	if ( get_option( 'comment_registration' ) && fp_options('allow_comments') ) {
-		add_action('admin_notices', create_function( '', "echo '<div class=\"error\"><p>".__('FacePress Comment function doesn\'t work with sites that require registration to comment.')."</p></div>';" ) );
+		add_action('admin_notices', create_function( '', "echo '<div class=\"error\"><p>".__('FacePress Comment function doesn\'t work with sites that require registration to comment.', 'fp')."</p></div>';" ) );
 	}
 }
 
@@ -512,10 +512,10 @@ function fp_update_user_details() {
 		jQuery('#alt-comment-login').hide();
 		jQuery('#comment-user-details').hide().after("<span id='fb-user'>" +
 		"<fb:profile-pic uid='loggedinuser' facebook-logo='true' size='normal' height='50' width='50' class='avatar' id='fb-avatar'></fb:profile-pic>" +
-		"<span id='fb-msg'><strong><?php printf(__('Hi %s!'), "<fb:name uid='loggedinuser' useyou='false'></fb:name>"); ?></strong><br /><?php _e('You are connected with your Facebook account.'); ?>" +
-		"<a href='#' onclick='FB.Connect.logoutAndRedirect(\"<?php the_permalink() ?>\"); return false;'><?php _e('Logout'); ?></a>" +
+		"<span id='fb-msg'><strong><?php printf(__('Hi %s!', 'fp'), "<fb:name uid='loggedinuser' useyou='false'></fb:name>"); ?></strong><br /><?php _e('You are connected with your Facebook account.', 'fp'); ?>" +
+		"<a href='#' onclick='FB.Connect.logoutAndRedirect(\"<?php the_permalink() ?>\"); return false;'><?php _e('Logout', 'fp'); ?></a>" +
 		"</span></span>");
-		jQuery('#fp_comm_send').html('<input style="width: auto;" type="checkbox" id="fp_comm_share" /><label for="fp_comm_send"><?php _e('Share Comment on Facebook'); ?></label>');
+		jQuery('#fp_comm_send').html('<input style="width: auto;" type="checkbox" id="fp_comm_share" /><label for="fp_comm_send"><?php _e('Share Comment on Facebook', 'fp'); ?></label>');
 	}
 
 	// Refresh the DOM
@@ -651,7 +651,7 @@ function fp_comm_make_excerpt($text) {
 }
 
 function fp_comm_login_button() {
-	echo '<p id="fb-connect">'.fp_get_login_button(__('Connect with Facebook'), 'email', 'fp_update_user_details();') . '</p>';
+	echo '<p id="fb-connect">'.fp_get_login_button(__('Connect with Facebook', 'fp'), 'email', 'fp_update_user_details();') . '</p>';
 }
 
 if( !function_exists('alt_comment_login') ) {
@@ -752,12 +752,12 @@ function fp_login_profile_page($profile) {
 ?>
 	<table class="form-table">
 		<tr>
-			<th><label><?php _e('Facebook Connect'); ?></label></th>
+			<th><label><?php _e('Facebook Connect', 'fp'); ?></label></th>
 <?php
 	$fbuid = get_user_meta($profile->ID, 'fbuid', true);	
 	if (empty($fbuid)) { 
 		?>
-			<td><p><?php echo fp_get_login_button(__('Connect to Facebook'), 'email', 'fp_login_update_fbuid(0);', array('size' => 'large') ); ?></p></td>
+			<td><p><?php echo fp_get_login_button(__('Connect to Facebook', 'fp'), 'email', 'fp_login_update_fbuid(0);', array('size' => 'large') ); ?></p></td>
 		</tr>
 	</table>
 	<?php	
@@ -897,7 +897,7 @@ function fp_login_add_login_button() {
     <input id="fb-login" type="hidden" name="fb-ogin" value="0" />
 	<?php
 	$style = apply_filters('fp_login_button_style', ' style="text-align: center; margin: 5px 0;"');
-	if ($action == 'login') echo '<p id="fb-login"'.$style.'>' . fp_get_login_button(__('Connect with Facebook'), 'email', 'fp_login();') . '</p>';
+	if ($action == 'login') echo '<p id="fb-login"'.$style.'>' . fp_get_login_button(__('Connect with Facebook', 'fp'), 'email', 'fp_login();') . '</p>';
 }
 
 add_filter('authenticate','fp_login_check',90);
@@ -943,7 +943,7 @@ function fp_login_check($user) {
 				} else {
 					do_action('fp_login_new_fb_user',$fb); // hook for creating new users if desired
 					global $error;
-					$error = __('<strong>ERROR</strong>: Facebook user not recognized.');
+					$error = __('<strong>ERROR</strong>: Facebook user not recognized.', 'fp');
 				}
 			}
 
@@ -1040,15 +1040,15 @@ add_filter('the_content', 'fblike_automatic', 30);
 // add the admin sections to the fp page
 add_action('admin_init', 'fp_like_admin_init');
 function fp_like_admin_init() {
-	add_settings_section('fp_like', __('Like Button Settings'), 'fp_like_section_callback', 'fp');
-	add_settings_field('fp_like_position', __('Like Button Position'), 'fp_like_position', 'fp', 'fp_like');
-	add_settings_field('fp_like_layout', __('Like Button Layout'), 'fp_like_layout', 'fp', 'fp_like');
-	add_settings_field('fp_like_action', __('Like Button Action'), 'fp_like_action', 'fp', 'fp_like');
-	add_settings_field('fp_like_css', __('Like Button CSS'), 'fp_like_css', 'fp', 'fp_like');
+	add_settings_section('fp_like', __('Like Button Settings', 'fp'), 'fp_like_section_callback', 'fp');
+	add_settings_field('fp_like_position', __('Like Button Position', 'fp'), 'fp_like_position', 'fp', 'fp_like');
+	add_settings_field('fp_like_layout', __('Like Button Layout', 'fp'), 'fp_like_layout', 'fp', 'fp_like');
+	add_settings_field('fp_like_action', __('Like Button Action', 'fp'), 'fp_like_action', 'fp', 'fp_like');
+	add_settings_field('fp_like_css', __('Like Button CSS', 'fp'), 'fp_like_css', 'fp', 'fp_like');
 }
 
 function fp_like_section_callback() {
-	echo '<p>'.__('Choose where you want the like button added to your content.').'</p>';
+	echo '<p>'.__('Choose where you want the like button added to your content.', 'fp').'</p>';
 }
 
 function fp_like_position() {
@@ -1056,10 +1056,10 @@ function fp_like_position() {
 	if (!$options['like_position']) $options['like_position'] = 'manual';
 	?>
 	<ul>
-	<li><label><input type="radio" name="fp_options[like_position]" value="before" <?php checked('before', $options['like_position']); ?> /> <?php _e('Before the content of your post'); ?></label></li>
-	<li><label><input type="radio" name="fp_options[like_position]" value="after" <?php checked('after', $options['like_position']); ?> /> <?php _e('After the content of your post'); ?></label></li>
-	<li><label><input type="radio" name="fp_options[like_position]" value="both" <?php checked('both', $options['like_position']); ?> /> <?php _e('Before AND After the content of your post'); ?></label></li>
-	<li><label><input type="radio" name="fp_options[like_position]" value="manual" <?php checked('manual', $options['like_position']); ?> /> <?php _e('Manually add the button to your theme or posts (use the get_fblike function in your theme)'); ?></label></li>
+	<li><label><input type="radio" name="fp_options[like_position]" value="before" <?php checked('before', $options['like_position']); ?> /> <?php _e('Before the content of your post', 'fp'); ?></label></li>
+	<li><label><input type="radio" name="fp_options[like_position]" value="after" <?php checked('after', $options['like_position']); ?> /> <?php _e('After the content of your post', 'fp'); ?></label></li>
+	<li><label><input type="radio" name="fp_options[like_position]" value="both" <?php checked('both', $options['like_position']); ?> /> <?php _e('Before AND After the content of your post', 'fp'); ?></label></li>
+	<li><label><input type="radio" name="fp_options[like_position]" value="manual" <?php checked('manual', $options['like_position']); ?> /> <?php _e('Manually add the button to your theme or posts (use the get_fblike function in your theme)', 'fp'); ?></label></li>
 	</ul>
 <?php 
 }
@@ -1069,8 +1069,8 @@ function fp_like_layout() {
 	if (!$options['like_layout']) $options['like_layout'] = 'standard';
 	?>
 	<ul>
-	<li><label><input type="radio" name="fp_options[like_layout]" value="standard" <?php checked('standard', $options['like_layout']); ?> /> <?php _e('Standard'); ?></label></li>
-	<li><label><input type="radio" name="fp_options[like_layout]" value="button_count" <?php checked('button_count', $options['like_layout']); ?> /> <?php _e('Button with counter'); ?></label></li>
+	<li><label><input type="radio" name="fp_options[like_layout]" value="standard" <?php checked('standard', $options['like_layout']); ?> /> <?php _e('Standard', 'fp'); ?></label></li>
+	<li><label><input type="radio" name="fp_options[like_layout]" value="button_count" <?php checked('button_count', $options['like_layout']); ?> /> <?php _e('Button with counter', 'fp'); ?></label></li>
 	</ul>
 <?php 
 }
@@ -1080,8 +1080,8 @@ function fp_like_action() {
 	if (!$options['like_action']) $options['like_action'] = 'like';
 	?>
 	<ul>
-	<li><label><input type="radio" name="fp_options[like_action]" value="like" <?php checked('like', $options['like_action']); ?> /> <?php _e('Like'); ?></label></li>
-	<li><label><input type="radio" name="fp_options[like_action]" value="recommend" <?php checked('recommend', $options['like_action']); ?> /> <?php _e('Recommend'); ?></label></li>
+	<li><label><input type="radio" name="fp_options[like_action]" value="like" <?php checked('like', $options['like_action']); ?> /> <?php _e('Like', 'fp'); ?></label></li>
+	<li><label><input type="radio" name="fp_options[like_action]" value="recommend" <?php checked('recommend', $options['like_action']); ?> /> <?php _e('Recommend', 'fp'); ?></label></li>
 	</ul>
 <?php 
 }
