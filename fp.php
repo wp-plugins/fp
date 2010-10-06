@@ -511,7 +511,7 @@ function fp_update_user_details() {
 		jQuery('#comment-user-details').hide().after("<span id='fb-user'>" +
 		"<fb:profile-pic uid='loggedinuser' facebook-logo='true' size='normal' height='50' width='50' class='avatar' id='fb-avatar'></fb:profile-pic>" +
 		"<span id='fb-msg'><strong><?php printf(__('Hi %s!', 'fp'), "<fb:name uid='loggedinuser' useyou='false'></fb:name>"); ?></strong><br /><?php _e('You are connected with your Facebook account.', 'fp'); ?>" +
-		"<a href='#' onclick='FB.Connect.logoutAndRedirect(\"<?php the_permalink() ?>\"); return false;'><?php _e('Logout', 'fp'); ?></a>" +
+		"<a href='#' onclick='FB.logout(function(){window.location=\"<?php the_permalink() ?>\"}); return false;'><?php _e('Logout', 'fp'); ?></a>" +
 		"</span></span>");
 		jQuery('#fp_comm_send').html('<input style="width: auto;" type="checkbox" id="fp_comm_share" /><label for="fp_comm_send"><?php _e('Share Comment on Facebook', 'fp'); ?></label>');
 	}
