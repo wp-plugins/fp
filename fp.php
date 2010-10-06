@@ -3,7 +3,7 @@
 Plugin Name: FacePress
 Description: All the tools you need to integrate your wordpress and facebook.
 Author: Louy
-Version: 0.1
+Version: 0.3
 Author URI: http://louyblog.wordpress.com 
 Text Domain: tp
 Domain Path: /po
@@ -22,7 +22,7 @@ load_plugin_textdomain( 'fp', false, dirname( plugin_basename( __FILE__ ) ) . '/
 /**
  * FacePress Core:
  */
-define('FP_VERSION', '0.1');
+define('FP_VERSION', '0.3');
 
 // require PHP 5
 function fp_activation_check(){
@@ -517,7 +517,7 @@ function fp_update_user_details() {
 	}
 
 	// Refresh the DOM
-	FB.XFBML.Host.parseDomTree();
+	FB.XFBML.parse();
 }
 
 jQuery("#commentform").bind('submit',fp_handle_submit_share);
