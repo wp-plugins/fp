@@ -532,7 +532,7 @@ function fp_handle_submit_share() {
 // first, check if we already have email permission
 var fp_comm_email_perm = false;
 
-FB.Facebook.apiClient.users_hasAppPermission('email',function(res,ex){
+FB.api({method:'users.hasAppPermission', ext_perm:'email'},function(res){
 	if (res == 0) {
 		// no permission, ask for it on submit
 		jQuery("#commentform").bind('submit',fp_get_email_perms);
