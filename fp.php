@@ -359,9 +359,9 @@ function fp_is_fan($pageid='0') {
 	}
 
 	include_once 'facebook.php';
-	$fb=new Facebook($options['api_key'], $options['app_secret']);
+	$fb = new Facebook($options['api_key'], $options['app_secret']);
 	
-	$fbuid=$fb->get_loggedin_user();
+	$fbuid = $fb->getUser();
 	
 	if (!$fbuid) return false;
 
@@ -377,7 +377,7 @@ function fp_get_user() {
 	$options = fp_options();
 	include_once 'facebook.php';
 	$fb=new Facebook($options['api_key'], $options['app_secret']);
-	$fbuid=$fb->get_loggedin_user();
+	$fbuid=$fb->getUser();
 	return $fbuid;
 }
 
@@ -697,7 +697,7 @@ function fp_comm_add_meta($comment_id) {
 	$options = get_option('fp_options');
 	include_once 'facebook.php';
 	$fb=new Facebook($options['api_key'], $options['app_secret']);
-	$fbuid=$fb->get_loggedin_user();
+	$fbuid=$fb->getUser();
 	if ($fbuid) {
 		update_comment_meta($comment_id, 'fbuid', $fbuid);
 	}
@@ -710,7 +710,7 @@ function fp_comm_fill_in_fields($comment_post_ID) {
 	$options = get_option('fp_options');
 	include_once 'facebook.php';
 	$fb=new Facebook($options['api_key'], $options['app_secret']);
-	$fbuid=$fb->get_loggedin_user();
+	$fbuid=$fb->getUser();
 	
 	// this is a facebook user, override the sent values with FB info
 	if ($fbuid) {
@@ -946,7 +946,6 @@ function fp_login_check($user) {
 			}
 
 	    } catch (Exception $ex) {
-	        $fb->clear_cookie_state();
 	    }
 	    
 	endif;

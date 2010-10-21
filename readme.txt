@@ -4,7 +4,7 @@ Author URL: http://louyblog.wordpress.com/
 Tags: twitter, oauth, login, tweet, tweetbutton, comment, publish, connect
 Requires at least: 3.0
 Tested up to: 3.0.1
-Stable tag: 0.3
+Stable tag: 0.4
 
 All the tools you need to integrate your wordpress and twitter.
 
@@ -19,6 +19,9 @@ FacePress, is a plugin that allows you to integrate facebook and your blog very 
 * Allow your blog users to sign in with their facebook ids. one click signin!
 
 == Changelog ==
+
+= 0.4 =
+* A bug fix that was preventing users from commenting
 
 = 0.3 =
 * A bug fix with the comment login
