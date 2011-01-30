@@ -6,7 +6,7 @@ Requires at least: 3.0
 Tested up to: 3.0.1
 Stable tag: 0.3
 
-All the tools you need to integrate your wordpress and twitter.
+All the tools you need to integrate your wordpress and facebook.
 
 == Description ==
 
