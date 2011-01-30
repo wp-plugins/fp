@@ -165,16 +165,16 @@ function fp_get_connect_button($action='', $perms = '', $data = array(), $image 
 				'action' => $action,
 				'location' => fp_get_current_url(),
 				'perms' => $perms
-				) ) . '" title="'.__('Login with Facebook', 'tp').'"';
+				) ) . '" title="'.__('Login with Facebook', 'fp').'"';
 				
 	foreach( $data as $k => $v ) {
 		$return .= " $k=\"$v\"";
 	}
 	
 	$return .= '>'.
-			'<img src="'.$imgsrc.'" alt="'.__('Login with Facebook', 'tp').'" style="border:none;" />'.
+			'<img src="'.$imgsrc.'" alt="'.__('Login with Facebook', 'fp').'" style="border:none;" />'.
 		'</a>';
-	return apply_filters('fp_get_connect_button', $return, $action, $perms, $image);
+	return apply_filters('fp_get_connect_button', $return, $action, $perms, $image, $data);
 }
 
 function fp_get_current_url() {
