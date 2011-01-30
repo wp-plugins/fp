@@ -1,12 +1,12 @@
 === Plugin Name ===
 Contributors: louyx
 Author URL: http://louyblog.wordpress.com/
-Tags: twitter, oauth, login, tweet, tweetbutton, comment, publish, connect
+Tags: facebook, oauth, login, share, likebutton, comment, connect
 Requires at least: 3.0
-Tested up to: 3.0.1
-Stable tag: 0.4
+Tested up to: 3.1
+Stable tag: 1.0
 
-All the tools you need to integrate your wordpress and twitter.
+All the tools you need to integrate your wordpress and facebook.
 
 == Description ==
 
@@ -19,6 +19,13 @@ FacePress, is a plugin that allows you to integrate facebook and your blog very 
 * Allow your blog users to sign in with their facebook ids. one click signin!
 
 == Changelog ==
+
+= 1.0 =
+* Now using the wp-oauth.php script http://gist.github.com/585267
+* FacePress now works in an awesome way on multi-site wordpress installations
+* FacePress now uses the new Facebook graph API
+* FacePress App Settings is in the network admin (WP 3.1+)
+* Few bug fixes
 
 = 0.4 =
 * A bug fix that was preventing users from commenting
@@ -37,4 +44,4 @@ FacePress, is a plugin that allows you to integrate facebook and your blog very 
 
 1. Download the plugin, unzip it and upload it to `/wp-content/plugins/` directory.
 1. Activate the plugin through the 'Plugins' menu in WordPress.
-1. Go to Settings &raquo; FacePress and enter your key and secret.
+1. Go to Settings &raquo; FacePress App and enter your key and secret.
