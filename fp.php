@@ -38,12 +38,6 @@ function fp_activate(){
 }
 register_activation_hook(__FILE__, 'fp_activate');
 
-function fp_include_api() {
-    if( !class_exists('Facebook') ) {
-        require_once dirname(__FILE__) . '/facebook.php';
-    }
-}
-
 if( !isset( $_SERVER['HTTPS'] ) )
 	$_SERVER['HTTPS'] = false;
 
@@ -132,20 +126,6 @@ function fb_me() {
 	return false;
 }
 
-function fp_get_api() {
-	static $api = false;
-	if( !$api ) {
-		fp_include_api();
-		
-		$api = new Facebook(array(
-			'appId'  => fp_options('appId'),
-			'secret' => fp_options('secret'),
-			'cookie' => true,
-		));
-	}
-	return $api;
-}
-
 function fb_all_js() {
 	/* translators: Facebook Locale */
 	$locale = _x('en_US', 'FB Locale', 'fp');
@@ -178,7 +158,7 @@ function fp_lang_atts($lang) {
     return ' xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" '.$lang;
 }
 
-function fp_get_connect_button($action='', $perms = '', $data = array(), $image ='login-with-facebook.gif') {
+function fp_get_connect_button($action='', $perms = '', $data = array(), $image ='login-with-fb.gif') {
 	$image = apply_filters('fp_connect_button_image', $image, $action);
 	$imgsrc = apply_filters('fp_connect_button_image_src', plugins_url() . '/fp/images/'.$image, $image, $action);
 	$return = '<a href="' . oauth_link('facebook', array(
