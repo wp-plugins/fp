@@ -3,7 +3,7 @@
 Plugin Name: FacePress
 Description: All the tools you need to integrate your wordpress and facebook.
 Author: Louy
-Version: 1.0
+Version: 1.1
 Author URI: http://l0uy.com/
 Text Domain: fp
 Domain Path: /po
@@ -20,7 +20,7 @@ if you want to force the plugin to use an app id, key, secret and/or fanpage,
 // Load translations
 load_plugin_textdomain( 'fp', false, dirname( plugin_basename( __FILE__ ) ) . '/po/' );
 
-define('FP_VERSION', '1.0');
+define('FP_VERSION', '1.1');
 
 require_once dirname(__FILE__).'/wp-oauth.php';
 
@@ -66,6 +66,10 @@ function fp_options($k=false) {
         add_option('fp_options', $options = array(
             'allow_comment' => false,
             'comm_text' => '',
+            'like_position' => '',
+            'like_layout' => '',
+            'like_action' => '',
+            'like_css' => '',
         ));
     }
 
@@ -165,16 +169,16 @@ function fp_get_connect_button($action='', $perms = '', $data = array(), $image 
 				'action' => $action,
 				'location' => fp_get_current_url(),
 				'perms' => $perms
-				) ) . '" title="'.__('Login with Facebook', 'tp').'"';
+				) ) . '" title="'.__('Login with Facebook', 'fp').'"';
 				
 	foreach( $data as $k => $v ) {
 		$return .= " $k=\"$v\"";
 	}
 	
 	$return .= '>'.
-			'<img src="'.$imgsrc.'" alt="'.__('Login with Facebook', 'tp').'" style="border:none;" />'.
+			'<img src="'.$imgsrc.'" alt="'.__('Login with Facebook', 'fp').'" style="border:none;" />'.
 		'</a>';
-	return apply_filters('fp_get_connect_button', $return, $action, $perms, $image);
+	return apply_filters('fp_get_connect_button', $return, $action, $perms, $image, $data);
 }
 
 function fp_get_current_url() {
@@ -199,9 +203,9 @@ add_action('wp_head','fp_meta_head');
 function fp_meta_head() {
 	$options = fp_options();
 	
-	if ($options['appid']) {
+	if ($options['appId']) {
 	?>
-<meta property='fb:app_id' content='<?php echo $options['appid']; ?>' />
+<meta property='fb:app_id' content='<?php echo $options['appId']; ?>' />
 <?php
 	}
 	?>

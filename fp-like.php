@@ -37,8 +37,8 @@ function fblike_automatic($content) {
 	$options = fp_options();
 	
 	$args = array(
-		'layout'=>$options['like_layout'],
-		'action'=>$options['like_action'],
+		'layout' => $options['like_layout'],
+		'action' => $options['like_action'],
 	);
 	
 	$button = get_fblike($args);
