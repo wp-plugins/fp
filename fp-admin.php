@@ -59,6 +59,8 @@ function fp_admin_init(){
 		            'fp_setting_app_secret', 'fpapp', 'fp_app_settings' );
 		add_settings_field('fp-fanpage', __('Facebook Fan Page ID', 'fp'),
 		            'fp_setting_fanpage', 'fpapp', 'fp_app_settings' );
+		add_settings_field('fp-disable-login', __('Disable Facebook login', 'fp'),
+		            'fp_setting_disable_login', 'fpapp', 'fp_app_settings' );
     }
 }
 
@@ -146,7 +148,7 @@ function fp_setting_app_secret() {
 function fp_setting_fanpage() {
 	if (defined('FACEBOOK_FANPAGE')) return;
 	
-	if( fp_options('fanpage') ) { ?>
+	if( !fp_options('fanpage') ) { ?>
 
 <p><?php _e('Some sites use Fan Pages on Facebook to connect with their users. The Application wall acts as a  Fan Page in all respects, however some sites have been using Fan Pages previously, and already have communities and content built around them. Facebook offers no way to migrate these, so the option to use an existing Fan Page is offered for people with this situation. Note that this doesn&#39;t <em>replace</em> the application, as that is not optional. However, you can use a Fan Page for specific parts of the FacePress plugin, such as the Fan Box, the Publisher, and the Chicklet.', 'fp'); ?></p>
 
@@ -157,18 +159,25 @@ function fp_setting_fanpage() {
 	echo "<input type='text' name='fp_app_options[fanpage]' value='".fp_options('fanpage')."' size='40' />";
 }
 
+function fp_setting_disable_login() {
+	if (defined('FACEBOOK_DISABLE_LOGIN')) return;
+	
+	echo "<input type='checkbox' name='fp_app_options[disable_login]' value='yes' ".checked(fp_options('disable_login'),true,false)." />";
+}
+
 // validate our options
 function fp_options_validate($input) {
-	unset($input['appId'], $input['key'], $input['secret'], $input['fanpage']);
+	unset($input['appId'], $input['key'], $input['secret'], $input['fanpage'], $input['disable_login']);
 	$input = apply_filters('fp_validate_options',$input);
 	return $input;
 }
 function fp_update_app_options($new, $old) {
     $output = array(
-        'appId'   => $new['appId'],
-        'key'     => $new['key'],
-        'secret'  => $new['secret'],
-        'fanpage' => $new['fanpage'],
+        'appId'         => $new['appId'],
+        'key'           => $new['key'],
+        'secret'        => $new['secret'],
+        'fanpage'       => $new['fanpage'],
+        'disable_login' => $new['disable_login'],
     );
     
 	$input = apply_filters('fp_validate_app_options',$input);
@@ -207,6 +216,13 @@ function fp_validate_app_options($input) {
 	$input['fanpage'] = trim($input['fanpage']);
 	if(! preg_match('/^[0-9]+$/i', $input['fanpage'])) {
 	  $input['fanpage'] = '';
+	}
+	
+	// disable_login is boolean
+	if(isset($input['disable_login']) && $input['disable_login'] == 'yes') {
+		$input['disable_login'] = true;
+	} else {
+		$input['disable_login'] = false;
 	}
 	
 	return $input;

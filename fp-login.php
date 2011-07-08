@@ -73,14 +73,13 @@ function fp_login_connect() {
 	}
 }
 
-add_action('login_form','fp_login_add_login_button');
+
 function fp_login_add_login_button() {
 	global $action;
 	$style = apply_filters('fp_login_button_style', ' style="text-align: center;"');
 	if ($action == 'login') echo '<p id="fb-login"'.$style.'>'.fp_get_connect_button('login').'</p><br />';
 }
 
-add_filter('authenticate','fp_login_check');
 function fp_login_check($user) {
 	if ( is_a($user, 'WP_User') ) { return $user; } // check if user is already logged in, skip
 
@@ -100,8 +99,13 @@ function fp_login_check($user) {
 	return $user;
 }
 
-add_action('wp_logout','fp_logout');
 function fp_logout() {
     session_destroy();
 }
 
+
+if( !fp_app_options('disable_login') ) {
+	add_action('login_form','fp_login_add_login_button');
+	add_filter('authenticate','fp_login_check');
+	add_action('wp_logout','fp_logout');
+}

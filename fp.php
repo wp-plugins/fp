@@ -3,7 +3,7 @@
 Plugin Name: FacePress
 Description: All the tools you need to integrate your wordpress and facebook.
 Author: Louy
-Version: 1.1
+Version: 1.2
 Author URI: http://l0uy.com/
 Text Domain: fp
 Domain Path: /po
@@ -17,10 +17,12 @@ if you want to force the plugin to use an app id, key, secret and/or fanpage,
 //define('FACEBOOK_APP_SECRET', 'EtnterYourSecretHere');
 //define('FACEBOOK_FANPAGE', 'EnterYourPageIDHere');
 
+//define('FACEBOOK_DISABLE_LOGIN', true);
+
 // Load translations
 load_plugin_textdomain( 'fp', false, dirname( plugin_basename( __FILE__ ) ) . '/po/' );
 
-define('FP_VERSION', '1.1');
+define('FP_VERSION', '1.2');
 
 require_once dirname(__FILE__).'/wp-oauth.php';
 
@@ -88,15 +90,23 @@ function fp_app_options() {
             'appId' => '',
             'key' => '',
             'secret' => '',
-            'fanpage' => ''
+            'fanpage' => '',
+            'disable_login' => false
         ));
     }
 
     if( fp_app_options_defined() ) {
-        $options['appId']   = FACEBOOK_APP_ID    ;
-        $options['key']     = FACEBOOK_APP_KEY   ;
-        $options['secret']  = FACEBOOK_APP_SECRET;
-        $options['fanpage'] = FACEBOOK_FANPAGE   ;
+        defined('FACEBOOK_FANPAGE') or
+		define('FACEBOOK_FANPAGE', '');
+		
+		defined('FACEBOOK_DISABLE_LOGIN') or
+		define('FACEBOOK_DISABLE_LOGIN', fales);
+		
+        $options['appId']         = FACEBOOK_APP_ID       ;
+        $options['key']           = FACEBOOK_APP_KEY      ;
+        $options['secret']        = FACEBOOK_APP_SECRET   ;
+        $options['fanpage']       = FACEBOOK_FANPAGE      ;
+        $options['disable_login'] = FACEBOOK_DISABLE_LOGIN;
     }
 
     return $options;
@@ -233,5 +243,4 @@ require_once 'fp-admin.php';
 require_once 'fp-comment.php';
 
 require_once 'fp-like.php';
-
 
