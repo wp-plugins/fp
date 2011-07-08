@@ -162,7 +162,7 @@ function fp_setting_fanpage() {
 function fp_setting_disable_login() {
 	if (defined('FACEBOOK_DISABLE_LOGIN')) return;
 	
-	echo "<input type='checkbox' name='fp_app_options[disable_login]' value='yes' ".checked(fp_options('disable_login'),true,false)." />";
+	echo "<input type='checkbox' name='fp_app_options[disable_login]' value='yes'".(fp_options('disable_login')?" checked='checked'":"")." />";
 }
 
 // validate our options
@@ -220,9 +220,9 @@ function fp_validate_app_options($input) {
 	
 	// disable_login is boolean
 	if(isset($input['disable_login']) && $input['disable_login'] == 'yes') {
-		$input['disable_login'] = true;
+		$input['disable_login'] = 1;
 	} else {
-		$input['disable_login'] = false;
+		$input['disable_login'] = 0;
 	}
 	
 	return $input;

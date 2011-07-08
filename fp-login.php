@@ -104,7 +104,7 @@ function fp_logout() {
 }
 
 
-if( !fp_app_options('disable_login') ) {
+if( !fp_options('disable_login') ) {
 	add_action('login_form','fp_login_add_login_button');
 	add_filter('authenticate','fp_login_check');
 	add_action('wp_logout','fp_logout');
