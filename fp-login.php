@@ -5,7 +5,7 @@
 // add the section on the user profile page
 add_action('profile_personal_options','fp_login_profile_page');
 function fp_login_profile_page($profile) {
-	$options = tp_options();
+	$options = fp_options();
 ?>
 	<table class="form-table">
 		<tr>
