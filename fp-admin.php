@@ -53,8 +53,6 @@ function fp_admin_init(){
 		            'fp_app_settings_callback', 'fpapp');
 		add_settings_field('fp-app-id', __('Facebook App ID', 'fp'),
 		            'fp_setting_app_id', 'fpapp', 'fp_app_settings' );
-		add_settings_field('fp-app-key', __('Facebook App Key', 'fp'),
-		            'fp_setting_app_key', 'fpapp', 'fp_app_settings' );
 		add_settings_field('fp-app-secret', __('Facebook App Secret', 'fp'),
 		            'fp_setting_app_secret', 'fpapp', 'fp_app_settings' );
 		add_settings_field('fp-fanpage', __('Facebook Fan Page ID', 'fp'),
@@ -111,20 +109,20 @@ function fp_app_options_page() {
 function fp_app_settings_callback() {
 	if (!fp_ready()) {
 ?>
-<p><?php _e('To connect your site to Facebook, you will need a Facebook Application. If you have already created one, please insert your API key, Application Secret, and Application ID below.', 'fp'); ?></p>
-<p><strong><?php _e('Can&#39;t find your key?', 'fp'); ?></strong></p>
+<p><?php _e('To connect your site to Facebook, you will need a Facebook Application. If you have already created one, please insert your Application ID and Application Secret below.', 'fp'); ?></p>
+<p><strong><?php _e('Can&#39;t find your ID?', 'fp'); ?></strong></p>
 <ol>
 <li><?php _e('Get a list of your applications from here: <a target="_blank" href="http://www.facebook.com/developers/apps.php">Facebook Application List</a>', 'fp'); ?></li>
-<li><?php _e('Select the application you want, then copy and paste the API key, Application Secret, and Application ID from there.', 'fp'); ?></li>
+<li><?php _e('Select the application you want, then copy and paste the Application ID and the Application Secret from there.', 'fp'); ?></li>
 </ol>
 
 <p><strong><?php _e('Haven&#39;t created an application yet?</strong> Don&#39;t worry, it&#39;s easy!', 'fp'); ?></p>
 <ol>
 <li><?php _e('Go to this link to create your application: <a target="_blank" href="http://developers.facebook.com/setup.php">Facebook Connect Setup</a>', 'fp'); ?></li>
 <li><?php _e('When it tells you to "Upload a file" on step 2, just hit the "Upload Later" button. This plugin takes care of that part for you!', 'fp'); ?></li>
-<li><?php _e('On the final screen, there will be an API Key field, in the yellow box. Copy and paste that information into here.', 'fp'); ?></li>
+<li><?php _e('On the final screen, there will be an application info box. Copy and paste that information into here.', 'fp'); ?></li>
 <li><?php _e('You can get the rest of the information from the application on the <a target="_blank" href="http://www.facebook.com/developers/apps.php">Facebook Application List</a> page.', 'fp'); ?></li>
-<li><?php _e('Select the application you want, then copy and paste the API key, Application Secret, and Application ID from there.', 'fp'); ?></li>
+<li><?php _e('Select the application you want, then copy and paste the information from there.', 'fp'); ?></li>
 </ol>
 <?php
 	}
@@ -133,11 +131,6 @@ function fp_app_settings_callback() {
 function fp_setting_app_id() {
 	if (defined('FACEBOOK_APP_ID')) return;
 	echo "<input type='text' name='fp_app_options[appId]' value='".fp_options('appId')."' size='40' /> " . __('(required)', 'tp');
-}
-
-function fp_setting_app_key() {
-	if (defined('FACEBOOK_APP_KEY')) return;
-	echo "<input type='text' name='fp_app_options[key]' value='".fp_options('key')."' size='40' /> " . __('(required)', 'tp');
 }
 
 function fp_setting_app_secret() {
@@ -167,14 +160,13 @@ function fp_setting_disable_login() {
 
 // validate our options
 function fp_options_validate($input) {
-	unset($input['appId'], $input['key'], $input['secret'], $input['fanpage'], $input['disable_login']);
+	unset($input['appId'], $input['secret'], $input['fanpage'], $input['disable_login']);
 	$input = apply_filters('fp_validate_options',$input);
 	return $input;
 }
 function fp_update_app_options($new, $old) {
     $output = array(
         'appId'         => $new['appId'],
-        'key'           => $new['key'],
         'secret'        => $new['secret'],
         'fanpage'       => $new['fanpage'],
         'disable_login' => $new['disable_login'],
@@ -194,13 +186,7 @@ function fp_update_app_options($new, $old) {
 add_filter('fp_validate_app_options', 'fp_validate_app_options');
 function fp_validate_app_options($input) {
 
-	// api keys are 32 bytes long and made of hex values
-	$input['key'] = trim($input['key']);
-	if(! preg_match('/^[a-f0-9]{32}$/i', $input['key'])) {
-	  $input['key'] = '';
-	}
-
-	// api keys are 32 bytes long and made of hex values
+	// api secrets are 32 bytes long and made of hex values
 	$input['secret'] = trim($input['secret']);
 	if(! preg_match('/^[a-f0-9]{32}$/i', $input['secret'])) {
 	  $input['secret'] = '';

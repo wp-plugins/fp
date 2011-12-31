@@ -23,8 +23,8 @@ function fp_oauth() {
 			$url = add_query_arg('redirect_uri', $redirect_uri, $url);
 			$url = add_query_arg('client_secret', $secret, $url);
 			$url = add_query_arg('code', $_GET['code'], $url);
-		
-			$token = wp_remote_get($url);
+			
+			$token = wp_remote_get($url, array('sslverify' => false) );
 			
 			$t = wp_parse_args( $token['body'], array(
 					'access_token' => false, 'expires' => false

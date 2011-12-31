@@ -5,7 +5,7 @@
 // add the section on the user profile page
 add_action('profile_personal_options','fp_login_profile_page');
 function fp_login_profile_page($profile) {
-	$options = tp_options();
+	$options = fp_options();
 ?>
 	<table class="form-table">
 		<tr>
@@ -16,12 +16,15 @@ function fp_login_profile_page($profile) {
 		?>
 			<td><?php echo fp_get_connect_button('login_connect'); ?></td>
 	<?php
-	} else { ?>
+	} else {
+		$obj = wp_remote_get('https://graph.facebook.com/'.$fbuid.'?access_token='.$_SESSION['fp_access_token']['access_token']);
+		$obj = json_decode($obj['body']);
+		?>
 		<td><p><?php _e('Connected as ', 'fp'); ?></p>
 			<table><tr><td>
-				<fb:profile-pic size="square" width="32" height="32" uid="<?php echo $fbuid; ?>" linked="true"></fb:profile-pic>
+				<a href="http://graph.facebook.com/<?php echo $fbuid; ?>"><img src="http://graph.facebook.com/<?php echo $fbuid; ?>/picture?size=square" width="32" height="32" /></a>
 			</td><td>
-				<strong><fb:name useyou="false" uid="<?php echo $fbuid; ?>"></fb:name></strong>
+				<strong><?php echo $obj->name; ?></strong>
 			</td></tr><tr><td colspan="2">
 				<input type="button" class="button-primary" value="<?php _e('Disconnect', 'fb'); ?>" onclick="return fp_login_disconnect()" />
 			</td></tr></table>

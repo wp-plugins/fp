@@ -3,8 +3,8 @@ Contributors: louyx
 Author URL: http://louyblog.wordpress.com/
 Tags: facebook, oauth, login, share, likebutton, comment, connect
 Requires at least: 3.0
-Tested up to: 3.2
-Stable tag: 1.2
+Tested up to: 3.3.1
+Stable tag: 1.4
 
 All the tools you need to integrate your wordpress and facebook.
 
@@ -19,6 +19,13 @@ FacePress, is a plugin that allows you to integrate facebook and your blog very 
 * Allow your blog users to sign in with their facebook ids. one click signin!
 
 == Changelog ==
+
+= 1.4 =
+* General fixes and optimizations
+
+= 1.3 =
+* Fixing an issue with facebook and SSL on some servers
+* Using Facebook HTML5 support and graph API
 
 = 1.2 =
 * Adding an option to disable login with facebook in the app settings page
@@ -51,4 +58,4 @@ FacePress, is a plugin that allows you to integrate facebook and your blog very 
 
 1. Download the plugin, unzip it and upload it to `/wp-content/plugins/` directory.
 1. Activate the plugin through the 'Plugins' menu in WordPress.
-1. Go to Settings &raquo; FacePress App and enter your key and secret.
+1. Go to Settings &raquo; FacePress App and enter your app id and secret.

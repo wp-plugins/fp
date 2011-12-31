@@ -6,22 +6,29 @@ global $fblike_defaults;
 $fblike_defaults = array(
 	'id'=>0,
 	'showfaces'=>'true',
+	'send'=>'true',
 	'width'=>'260',
 	'colorscheme'=>'light',
+	'layout'=>'standard',
 );
 
 function get_fblike($args='') {
 	global $fblike_defaults;
-	$args['css'] = esc_attr(fp_options('like_css'));
-	$args = apply_filters('fblike_args', wp_parse_args($fblike_defaults, $args));
+	$fblike_defaults['css'] = esc_attr(fp_options('like_css'));
+	$args = apply_filters('fblike_args', wp_parse_args($args,$fblike_defaults));
 	extract($args);
 	
 	$url = get_permalink($id);
 	
-	return "<div class=\"fblike\" style=\"$css\"><fb:like href='{$url}' layout='{$layout}' show_faces='{$showfaces}' width='{$width}' action='{$action}' colorscheme='{$colorscheme}' /></div>";
+	$send = $send=='true'?'true':'false';
+	
+	return <<<EOF
+<div class="fb-like" data-href="{$url}" style="{$css}" data-send="{$send}" data-layout="{$layout}" data-width="{$width}" data-show-faces="{$showfaces}" data-action="{$action}" data-colorscheme="{$colorscheme}"></div>
+EOF;
+
 }
 
-function fblike($args) {
+function fblike($args='') {
 	echo get_fblike($args);
 }
 
@@ -39,6 +46,7 @@ function fblike_automatic($content) {
 	$args = array(
 		'layout' => $options['like_layout'],
 		'action' => $options['like_action'],
+		'send' => $options['like_send'],
 	);
 	
 	$button = get_fblike($args);
@@ -66,6 +74,7 @@ function fp_like_admin_init() {
 	add_settings_section('fp_like', __('Like Button Settings', 'fp'), 'fp_like_section_callback', 'fp');
 	add_settings_field('fp_like_position', __('Like Button Position', 'fp'), 'fp_like_position', 'fp', 'fp_like');
 	add_settings_field('fp_like_layout', __('Like Button Layout', 'fp'), 'fp_like_layout', 'fp', 'fp_like');
+	add_settings_field('fp_like_send', __('Show Send Button', 'fp'), 'fp_like_send', 'fp', 'fp_like');
 	add_settings_field('fp_like_action', __('Like Button Action', 'fp'), 'fp_like_action', 'fp', 'fp_like');
 	add_settings_field('fp_like_css', __('Like Button CSS', 'fp'), 'fp_like_css', 'fp', 'fp_like');
 }
@@ -94,6 +103,15 @@ function fp_like_layout() {
 	<ul>
 	<li><label><input type="radio" name="fp_options[like_layout]" value="standard" <?php checked('standard', $options['like_layout']); ?> /> <?php _e('Standard', 'fp'); ?></label></li>
 	<li><label><input type="radio" name="fp_options[like_layout]" value="button_count" <?php checked('button_count', $options['like_layout']); ?> /> <?php _e('Button with counter', 'fp'); ?></label></li>
+	</ul>
+<?php 
+}
+
+function fp_like_send() {
+	$options = fp_options();
+	?>
+	<ul>
+	<li><label><input type="checkbox" name="fp_options[like_send]" value="true" <?php checked('true', $options['like_send']); ?> /> <?php _e('Send Button', 'fp'); ?></label></li>
 	</ul>
 <?php 
 }

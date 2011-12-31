@@ -3,17 +3,16 @@
 Plugin Name: FacePress
 Description: All the tools you need to integrate your wordpress and facebook.
 Author: Louy
-Version: 1.2
+Version: 1.4
 Author URI: http://l0uy.com/
 Text Domain: fp
 Domain Path: /po
 */
 /*
-if you want to force the plugin to use an app id, key, secret and/or fanpage,
- add your keys and uncomment the following three lines:
+if you want to force the plugin to use app id and secret and/or fanpage,
+ add your info and uncomment the following three lines:
 */
 //define('FACEBOOK_APP_ID', 'EnterYourAppIDHere');
-//define('FACEBOOK_APP_KEY', 'EnterYourKeyHere');
 //define('FACEBOOK_APP_SECRET', 'EtnterYourSecretHere');
 //define('FACEBOOK_FANPAGE', 'EnterYourPageIDHere');
 
@@ -22,7 +21,7 @@ if you want to force the plugin to use an app id, key, secret and/or fanpage,
 // Load translations
 load_plugin_textdomain( 'fp', false, dirname( plugin_basename( __FILE__ ) ) . '/po/' );
 
-define('FP_VERSION', '1.2');
+define('FP_VERSION', '1.4');
 
 require_once dirname(__FILE__).'/wp-oauth.php';
 
@@ -58,7 +57,7 @@ function fp_init() {
 }
 
 function fp_app_options_defined() {
-    return defined('FACEBOOK_APP_ID') && defined('FACEBOOK_APP_KEY') && defined('FACEBOOK_APP_SECRET');
+    return defined('FACEBOOK_APP_ID') && defined('FACEBOOK_APP_SECRET');
 }
 
 function fp_options($k=false) {
@@ -70,6 +69,7 @@ function fp_options($k=false) {
             'comm_text' => '',
             'like_position' => '',
             'like_layout' => '',
+            'like_send' => 'true',
             'like_action' => '',
             'like_css' => '',
         ));
@@ -88,7 +88,6 @@ function fp_app_options() {
     if( !is_array($options) ) {
         add_site_option('fp_app_options', $options = array(
             'appId' => '',
-            'key' => '',
             'secret' => '',
             'fanpage' => '',
             'disable_login' => false
@@ -103,7 +102,6 @@ function fp_app_options() {
 		define('FACEBOOK_DISABLE_LOGIN', fales);
 		
         $options['appId']         = FACEBOOK_APP_ID       ;
-        $options['key']           = FACEBOOK_APP_KEY      ;
         $options['secret']        = FACEBOOK_APP_SECRET   ;
         $options['fanpage']       = FACEBOOK_FANPAGE      ;
         $options['disable_login'] = FACEBOOK_DISABLE_LOGIN;
@@ -115,7 +113,6 @@ function fp_app_options() {
 function fp_ready() {
 	$o = fp_app_options();
 	return isset($o['appId'])  && !empty($o['appId']) &&
-	       isset($o['key'])    && !empty($o['key'])   &&
 	       isset($o['secret']) && !empty($o['secret']);
 }
 
@@ -145,21 +142,13 @@ function fb_all_js() {
 	$locale = _x('en_US', 'FB Locale', 'fp');
 ?>
 <div id="fb-root"></div>
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId  : '<?php echo fp_options('api_key'); ?>',
-      status : false, cookie : true, xfbml  : true
-    });
-  };
-
-  (function() {
-    var e = document.createElement('script');
-    e.src = document.location.protocol + '//connect.facebook.net/<?php echo $locale; ?>/all.js';
-    e.async = true;
-    document.getElementById('fb-root').appendChild(e);
-  }());
-</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/<?php echo $locale; ?>/all.js#xfbml=1&appId=<?php echo fp_options('appId'); ?>";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <?php
 }
 
@@ -167,7 +156,7 @@ function fb_all_js() {
 add_action('wp_footer','fb_all_js',20);
 
 // fix up the html tag to have the FBML extensions
-add_filter('language_attributes','fp_lang_atts');
+//add_filter('language_attributes','fp_lang_atts');
 function fp_lang_atts($lang) {
     return ' xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/" '.$lang;
 }
@@ -197,15 +186,6 @@ function fp_get_current_url() {
 	$requested_url .= $_SERVER['HTTP_HOST'];
 	$requested_url .= $_SERVER['REQUEST_URI'];
 	return $requested_url;
-}
-
-function fp_get_login_button($text = '', $perms = '', $onlogin = '', $data = array() ) {
-	$return = '<fb:login-button v="2" perms="'.$perms.'" onlogin="'.$onlogin.'"';
-	foreach( $data as $k => $v ) {
-		$return .= " $k=\"$v\"";
-	}
-	$return .= '>' . $text . '</fb:login-button>';
-	return apply_filters('fp_get_login_button', $return, $text, $perms, $onlogin, $data );
 }
 
 // this adds the app id to allow you to use Facebook Insights on your domain, linked to your application.

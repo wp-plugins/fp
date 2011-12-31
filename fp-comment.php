@@ -64,128 +64,13 @@ function fp_comm_footer_script() {
 	});
 </script>
 	<?php
-	/*
-	$options = get_option('fp_options');
-?>
-<script type="text/javascript">
-var fb_connect_user = false;
-
-function fp_update_user_details() {
-	fb_connect_user = true;
-
-	if (!jQuery('#fb-user').length) {
-		jQuery('#alt-comment-login').hide();
-		jQuery('#comment-user-details').hide().after("<span id='fb-user'>" +
-		"<fb:profile-pic uid='loggedinuser' facebook-logo='true' size='square' height='50' width='50' class='avatar' id='fb-avatar'></fb:profile-pic>" +
-		"<span id='fb-msg'><strong><?php printf(__('Hi %s!', 'fp'), "<fb:name uid='loggedinuser' useyou='false'></fb:name>"); ?></strong><br /><?php _e('You are connected with your Facebook account.', 'fp'); ?>" +
-		"<a href='#' onclick='FB.logout(function(){window.location=\"<?php the_permalink() ?>\"}); return false;'><?php _e('Logout', 'fp'); ?></a>" +
-		"</span></span>");
-	}
-
-	// Refresh the DOM
-	FB.XFBML.parse();
-}
-
-<?php if (get_option('require_name_email')) { ?>
-// first, check if we already have email permission
-var fp_comm_email_perm = false;
-
-FB.api({method:'users.hasAppPermission', ext_perm:'email'},function(res){
-	if (res == 0) {
-		// no permission, ask for it on submit
-		jQuery("#commentform").bind('submit',fp_get_email_perms);
-	} else {
-		// we have permission, no special handler needed
-		fp_comm_email_perm = true;
-	}
-});
-
-// ask for email permission
-function fp_get_email_perms() {
-	if (fb_connect_user) {
-		if (fp_comm_email_perm) return true;
-			FB.Connect.showPermissionDialog("email", function(perms) {
-				if (perms.match("email")) {
-					fp_commentform_submit();
-					return true;
-				} else {
-					var dialog = FB.UI.FBMLPopupDialog('Email required', '');
-					var fbml='\
-<div id="fb_dialog_content" class="fb_dialog_content">\
-<div class="fb_confirmation_stripes"></div>\
-<div class="fb_confirmation_content"><p>This site requires permission to get your email address for you to leave a comment. You can not leave a comment without granting that permission.</p></div>\
-</div>';
-					dialog.setFBMLContent(fbml);
-					dialog.setContentWidth(540); 
-					dialog.setContentHeight(65);
-					dialog.set_placement(FB.UI.PopupPlacement.topCenter);
-					dialog.show();
-					setTimeout ( function() { dialog.close(); }, 5000 );					
-				}
-			});
-		return false;
-	} else {
-		return true;
-	}	
-}
-
-// submit the form
-function fp_commentform_submit() {
-	jQuery("#commentform").unbind('submit',fp_get_email_perms);
-	jQuery("#commentform :submit").click();
-}
-<?php } ?>
-
-function fp_setCookie(c_name,value,expiredays) {
-	var exdate=new Date();
-	exdate.setDate(exdate.getDate()+expiredays);
-	document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
-}
-
-function fp_getCookie(c_name) {
-	if (document.cookie.length>0) {
-		c_start=document.cookie.indexOf(c_name + "=");
-		if (c_start!=-1) {
-			c_start=c_start + c_name.length+1;
-			c_end=document.cookie.indexOf(";",c_start);
-			if (c_end==-1) c_end=document.cookie.length;
-			return unescape(document.cookie.substring(c_start,c_end));
-		}
-	}
-	return "";
-}
-
-FB.Connect.ifUserConnected(fp_update_user_details);
-if (fp_getCookie('fp_share') == 'yes') {
-	fp_setCookie('fp_share', null);
-	<?php
-		global $post;
-		// build the attachment
-		$permalink = get_permalink($post->ID);
-		$attachment['name'] = get_the_title();
-		$attachment['href'] = get_permalink();
-		$attachment['description'] = fp_comm_make_excerpt($post->post_content);
-		$attachment['caption'] = '{*actor*} left a comment on '.get_the_title();
-		$attachment['comments_xid'] = urlencode(get_permalink());
-					
-		$action_links[0]['text'] = 'Read Post';
-		$action_links[0]['href'] = get_permalink();
-	?>
-	
-	FB.Connect.streamPublish(null, 
-		<?php echo json_encode($attachment); ?>,
-		<?php echo json_encode($action_links); ?>
-		);
-}
-</script>
-<?php*/
 }
 
 function fp_comm_get_display() {
 	$fb = fb_me();
 	if ($fb) {
 		echo '<div id="fb-user">'.
-			 '<fb:profile-pic uid="'.$fb->id.'" width="50" height="50" id="fb-avatar" class="avatar" />'.
+			 '<img src="http://graph.facebook.com/'.$fb->id.'/picture" width="50" height="50" id="fb-avatar" class="avatar" />'.
 			 '<h3 id="fb-msg">' . sprintf(__('Hi %s!', 'fp'), $fb->name) . '</h3>'.
 			 '<p>'.__('You are connected with your Facebook account.', 'fp').'</p>'.
 			 apply_filters('fp_user_logout','<a href="' . esc_attr(add_query_arg('facebook-logout', '1', fp_get_current_url())) . '" id="fb-logout">'.__('Logout', 'fp').'</a>').
