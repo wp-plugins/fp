@@ -3,7 +3,7 @@ Contributors: louyx
 Author URL: http://louyblog.wordpress.com/
 Tags: facebook, oauth, login, share, likebutton, comment, connect
 Requires at least: 3.0
-Tested up to: 3.3.1
+Tested up to: 3.7
 Stable tag: 1.4
 
 All the tools you need to integrate your wordpress and facebook.
