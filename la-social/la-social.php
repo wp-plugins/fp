@@ -405,7 +405,7 @@ abstract class LA_Social {
 		*/
 	}
 
-	function get_avatar( $userid, $size = '96', $url_only = false ) {
+	function get_avatar( $userid, $size = '96', $default = '', $alt = false, $url_only = false ) {
 		$size = intval( $size );
 
 		switch( true ) { // size
@@ -423,15 +423,15 @@ abstract class LA_Social {
 		$api = $this->api_slug();
 
 		$src = "http://avatars.io/{$api}/{$userid}?size={$imgsize}";
-		$src = apply_filters( $this->prefix() . '_get_avatar_src', $src, $userid, $size );
+		$src = apply_filters( $this->prefix() . '_get_avatar_src', $src, $userid, $size, $default );
 
 		if( $url_only ) {
 			return $src;
 		}
 
-		$avatar = "<img width='{$size}' class='avatar avatar-{$size} {$api}-avatar' src='{$src}' />";
+		$avatar = "<img width='{$size}' class='avatar avatar-{$size} {$api}-avatar' src='{$src}' alt='{$alt}' />";
 
-		return apply_filters( $this->prefix() . '_get_avatar', $avatar, $userid, $size );
+		return apply_filters( $this->prefix() . '_get_avatar', $avatar, $userid, $size, $default, $alt );
 	}
 
 	static function get_instance( $file = null ) {

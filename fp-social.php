@@ -1,7 +1,11 @@
 <?php
 defined('FACEBOOK_SDK_V4_SRC_DIR') ||
 	define( 'FACEBOOK_SDK_V4_SRC_DIR', __DIR__ . '/lib/Facebook/' );
-require_once __DIR__ . '/la-social/la-social.php';
+
+if( !class_exists('LA_Social') ) {
+	require_once __DIR__ . '/la-social/la-social.php';
+}
+
 require_once __DIR__ . '/lib/autoload.php';
 
 use Facebook\FacebookSession;
@@ -11,10 +15,11 @@ use Facebook\FacebookRedirectLoginHelper;
 use Facebook\GraphUser;
 
 class FP_Social extends LA_Social {
-
 	function __construct( $file = null ) {
 		parent::__construct($file);
 		$modules[] = new LA_Social_Comments($this);
+
+		add_filter( 'comment_post_redirect', array( $this, 'comment_post_redirect' ) );
 	}
 
 	function prefix() {
@@ -44,11 +49,6 @@ class FP_Social extends LA_Social {
 			'appId',
 			'secret',
 		);
-	}
-
-	function options_defaults() {
-		return array(
-        );
 	}
 
 	function app_options_section_fields( $fields = array() ) {
@@ -99,7 +99,7 @@ class FP_Social extends LA_Social {
 			'</strong></p>';
 			echo '<ol>',
 				'<li>',
-					sprintf( __('Get a list of your applications from here: <a target="_blank" href="%s">Facebook Application List</a>', 'fp'), 'https://developers.facebook.com/apps/' ),
+					sprintf( __('Get a list of your applications from here: <a target="_blank" href="%s">Facebook Applications List</a>', 'fp'), 'https://developers.facebook.com/apps/' ),
 				'</li>',
 				'<li>',
 					__('Select the application you want, then copy and paste the Application ID and the Application Secret from there.', 'fp' ),
@@ -156,7 +156,7 @@ class FP_Social extends LA_Social {
 		}
 
 		$this->setup_session();
-		$helper = new FacebookRedirectLoginHelper( oauth_link('facebook') );
+		$helper = new FacebookRedirectLoginHelper( oauth_link( $this->api_slug() ) );
 
 		if( isset( $_GET['code'] ) ) {
 
@@ -174,8 +174,8 @@ class FP_Social extends LA_Social {
 				$this->oauth_error( __('Unknown Session Error.') );
 			}
 
-			$_SESSION['fb-connected'] = true;
 			$_SESSION['fp_access_token'] = $session->getToken();
+			$_SESSION['comment_user_service'] = $this->api_slug();
 
 			if( @$_SESSION[ $this->prefix() . '_callback_action' ] ) {
 				do_action('fp_action-'.$_SESSION[ $this->prefix() . '_callback_action' ]);
@@ -196,7 +196,6 @@ class FP_Social extends LA_Social {
 			$return_url[0] = implode(':', $return_url[0]);
 			$return_url = implode('?', $return_url);
 
-			// echo '<p>To complete the OAuth flow follow this URL: <a href="'. $return_url . '">' . $return_url . '</a></p>';
 			wp_redirect( utf8_encode( $return_url ) );
 			exit;
 
@@ -247,9 +246,10 @@ class FP_Social extends LA_Social {
 			return array(
 				'id' => $me->getId(),
 				'name' => $me->getName(),
+				'username' => $me->getId(),
 				'email' => $me->getEmail(),
 				'url' => $me->getLink(),
-				'image' => $this->get_avatar( $me->getId(), 100, true ),
+				'image' => $this->get_avatar( $me->getId(), 100, '', '', true ),
 			);
 		} catch( \Exception $ex ) {
 			if( WP_DEBUG ) {
@@ -259,4 +259,11 @@ class FP_Social extends LA_Social {
 		return false;
 	}
 
+	/* unset comment url cookie */
+	function comment_post_redirect( $location ) {
+		if( @$_SESSION['comment_user_service'] === $this->api_slug() ) {
+			setcookie('comment_author_url_' . COOKIEHASH, '', 0, COOKIEPATH, COOKIE_DOMAIN);
+		}
+		return $location;
+	}
 }

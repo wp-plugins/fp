@@ -51,7 +51,7 @@ class LA_Social_Comments extends LA_Social_Module {
 		foreach( array(
 			array(
 				'name' => 'allow_comment_login',
-				'label' => __('Allow Facebook users to comment', 'fp'),
+				'label' => sprintf( __('Allow %s users to comment', 'fp'), $this->api_name() ),
 				'type' => 'checkbox',
 			),
 			// array(
@@ -67,7 +67,7 @@ class LA_Social_Comments extends LA_Social_Module {
 	}
 
 	function section_callback() {
-		echo '<p>'.__('Allow facebook users to comment with their FB accounts.', 'fp').'</p>';
+		echo '<p>' . sprintf( __('Allow %s users to comment with their accounts.', 'fp'), $this->api_name() ) . '</p>';
 	}
 
 	function sanitize_options( $options ) {
@@ -95,6 +95,10 @@ class LA_Social_Comments extends LA_Social_Module {
 		if( !is_singular() || is_user_logged_in() || !comments_open() ) {
 			return;
 		}
+		if( @$_SESSION['comment_user_service'] !== $this->api_slug() ) {
+			return;
+		}
+
 		?>
 		<script>
 			jQuery(function($) {
@@ -116,6 +120,10 @@ class LA_Social_Comments extends LA_Social_Module {
 
 	function pre_comment_on_post( $comment_post_ID ) {
 		if (is_user_logged_in()) return; // do nothing to WP users
+
+		if( @$_SESSION['comment_user_service'] !== $this->api_slug() ) {
+			return;
+		}
 
 		$social_user = $this->parent->get_social_user();
 
@@ -146,9 +154,9 @@ class LA_Social_Comments extends LA_Social_Module {
 		$userid = get_comment_meta( $id_or_email->comment_ID, $this->prefix() . '_uid', true );
 
 		if( $userid ) {
-			$avatar = $this->parent->get_avatar( $userid );
+			$avatar = $this->parent->get_avatar( $userid, $size, $default, $alt );
 
-			return apply_filters( $this->prefix() . '_comment_avatar', $avatar, $userid, $id_or_email );
+			return apply_filters( $this->prefix() . '_comment_avatar', $avatar, $userid, $id_or_email, $size, $default, $alt );
 		}
 
 		return $avatar;
