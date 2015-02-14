@@ -1,34 +1,40 @@
 === Plugin Name ===
 Contributors: louyx
-Author URL: http://louyblog.wordpress.com/
-Tags: facebook, oauth, login, share, likebutton, comment, connect
-Requires at least: 3.0
-Tested up to: 3.7
+Author URL: http://l0uy.com/
+Tags: Facebook, oauth, login, share, likebutton, comment, connect
+Requires at least: 3.3
+Tested up to: 4.1
 Stable tag: 1.4
 
-All the tools you need to integrate your wordpress and facebook.
+All the tools you need to integrate WordPress and Facebook.
 
 == Description ==
 
-FacePress, is a plugin that allows you to integrate facebook and your blog very easily, you just need to configure a few stuff and voila! you're done! Happy FaceBook-ing.
+FacePress, is a plugin that allows you to integrate Facebook and your blog very easily, you just need to configure a few stuff and voila! you're done! Happy FaceBook-ing.
 
 = Key Features =
 
-* Allow your visitors to comment using their facebook ids
+* Allow your visitors to comment using their Facebook ids
 * Adds a like button to your posts, so your visitors can share your content.
-* Allow your blog users to sign in with their facebook ids. one click signin!
+* Allow your blog users to sign in with their Facebook ids. one click signin!
 
 == Changelog ==
+
+== Changelog ==
+
+= 2.0 =
+* Rewritten from ground up. Cleaner code and more extensibility.
+* Now using Facebook PHP SDK v4.
 
 = 1.4 =
 * General fixes and optimizations
 
 = 1.3 =
-* Fixing an issue with facebook and SSL on some servers
+* Fixing an issue with Facebook and SSL on some servers
 * Using Facebook HTML5 support and graph API
 
 = 1.2 =
-* Adding an option to disable login with facebook in the app settings page
+* Adding an option to disable login with Facebook in the app settings page
 
 = 1.1 =
 * Hiding some notices in debug mode
